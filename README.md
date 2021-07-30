@@ -12,7 +12,7 @@ npm install
 - Launch dev server
 
 ```
-npm run start
+npm run dev
 ```
 
 - Build
@@ -26,3 +26,12 @@ npm run build
 ```bash
 npm install simple-chart --save
 ```
+
+## 设计文档
+
+- Chart
+  - setOption
+  - addEventListener
+  - stage2d - canvas container
+    - addScene - canvas
+    - 

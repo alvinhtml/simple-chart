@@ -3,53 +3,83 @@ const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
-    entry: {
-        simplechart: ['./app/tools/hidpi-canvas.js', './app/minichart.js'],
-        index: './app/index.js'
+  entry: {
+    index: ['./node_modules/hidpi-canvas/dist/hidpi-canvas.min.js', './app/index.ts'],
+    pie: './app/example/pie.ts'
+  },
+  output: {
+    filename: '[name].js',
+    path: path.resolve(__dirname, 'dist'),
+    library: 'simple-chart',  // 类库名称
+    libraryTarget: 'umd'  // 类库打包方式
+  },
+  resolve: {
+    modules: [path.resolve('node_modules')],
+    alias: {
+      '~': path.resolve(__dirname, './app')
     },
-    output: {
-        filename: '[name].js',
-        path: path.resolve(__dirname, 'dist')
-    },
-    module: {
-        rules: [
-            {
-                test: /\.js$/,
-                use: {
-                    loader: 'babel-loader',
-                    options: {
-                        presets: [
-                            '@babel/preset-env'
-                        ],
-                        plugins: [
-                            '@babel/plugin-proposal-class-properties'
-                        ]
-                    }
-                }
-            },
-            {
-                test: /\.css$/,
-                use: ['style-loader', 'css-loader']
+    extensions: ['.js', '.jsx', '.ts', '.tsx', '.scss', '.css']
+  },
+  module: {
+    rules: [
+      {
+        test: /\.(scss|sass)$/,
+        use: [
+          {
+            loader: 'style-loader',
+            options: {
+                insertAt: 'top' // 插入到 head 顶部
             }
+          },
+          'postcss-loader',
+          {
+            loader: 'sass-loader',
+            options: {
+              includePaths: ['./node_modules/normalize-scss/sass']
+            }
+          }
         ]
+      },
+      {
+        test: /\.(ts|tsx)$/,
+        exclude: /node_modules/,
+        use: ['ts-loader']
+      },
+      {
+        test: /\.(jpg|png|gif|jpeg|bmp|eot|svg|ttf|woff|woff2)$/,
+        use: {
+          loader: 'url-loader',
+          options: {
+            limit: 20 * 1024,
+            outputPath: './',
+          }
+        }
+      }
+    ]
+  },
+  watch: true,
+  watchOptions: {
+      poll: 2000, //每秒问我多少次
+      aggregateTimeout: 1000, //防抖
+      ignored: /node_modules|vendor|build|public|resources/
+  },
+  plugins: [
+    new HtmlWebpackPlugin({
+      template: './app/example/index.html',
+      filename: 'pie.html'
+    })
+  ],
+  devServer: {
+    port: 8080,
+    progress: true,
+    contentBase: './build',
+    open: true,
+    //hot: true,
+    proxy: {
+      '/mui/src/css': {
+        target: 'http://project.xuehtml.com',
+        changeOrigin: true
+      }
     },
-    plugins: [
-        new HtmlWebpackPlugin({
-            template: './app/index.html',
-            filename: 'index.html'
-        })
-    ],
-    devServer: {
-        port: 8080,
-        progress: true,
-        contentBase: './build',
-        open: true,
-        //hot: true,
-        proxy: {
-            '/mui/src/css': {
-                target: 'http://project.xuehtml.com',
-                changeOrigin: true
-            }
-        },
-    }
+  }
 }
