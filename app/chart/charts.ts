@@ -1,40 +1,12 @@
 import Stage from "./stage";
 // import Scene from "./scene";
 import ChartPie from './chartPie';
-//
-interface Styles {
-  colors: Array<string>;
-  font: string;
-  valueStyle: string;
-  legend: string;
-}
-
-interface Option {
-  type: string;
-  style: Styles;
-}
-
-interface PieOption extends Option {
-    //半径
-    radius: string;
-
-    //圆心位置
-    center: Array<string|number>;
-
-    //图例
-    legend: Array<string>;
-
-    //图例对应的数据集
-    data: Array<number>;
-}
-
-
 
 /*!
  * [constructor 图表类]
  * @param element [HTMLDivElement]
  */
-export class Chart {
+export class Charts {
 
   stage2d: Stage
 
@@ -50,15 +22,6 @@ export class Chart {
   //需要复原的动画
   recoverAnimateList = []
 
-  //默认样式配置信息
-  style = {
-    colors: ['#f2711c', '#fbbd08', '#b5cc18', '#21ba45', '#00b5ad', '#2185d0', '#6435c9', '#a333c8', '#e03997', '#a5673f'],
-    font: '12px sans-serif',
-    legend: null,
-    nameStyle: null,
-    valueStyle: '{c}%'
-  }
-
   //图例Y轴偏移
   legendOffsetTop = 20
 
@@ -70,7 +33,7 @@ export class Chart {
     }
   }
 
-  setOption({type, ...option}: PieOption) {
+  setOption({type, ...option}: any) {
     this.charts = []
 
     switch (type) {
@@ -89,7 +52,6 @@ export class Chart {
   }
 
   setPie(option: Object) {
-    console.log("option", option);
     const pie = new ChartPie(option, this.stage2d)
 
     this.charts.push(pie)

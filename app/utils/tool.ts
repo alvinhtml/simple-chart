@@ -26,3 +26,13 @@ export function darken(hex: string): string {
   })
   return rgbToHex(arr[0], arr[1], arr[2])
 }
+
+export function getPixelRatio(context: CanvasRenderingContext2D) {
+    // const backingStore = context.backingStorePixelRatio ||
+    //       context.webkitBackingStorePixelRatio ||
+    //       context.mozBackingStorePixelRatio ||
+    //       context.msBackingStorePixelRatio ||
+    //       context.oBackingStorePixelRatio ||
+    //       context.backingStorePixelRatio || 1;
+    return (window.devicePixelRatio || 1) / 1;
+};

@@ -32,6 +32,9 @@ npm install simple-chart --save
 - Chart
   - setOption
   - addEventListener
-  - stage2d - canvas container
-    - addScene - canvas
-    - 
+- stage2d - canvas container
+  - getScene - return scene and added
+- Scene - canvas
+  - scene.paint(RenderFn)
+- CharePie
+  - setPie

@@ -1,14 +1,14 @@
 import Stage from "./stage";
+import Chart from "./chart";
 import { Pie } from './shape/index'
-import { animater } from './animater'
+import { animate } from './animater'
 import { lighten, darken } from '../utils/tool'
 
-export default class ChartPie {
+export default class ChartPie extends Chart {
   shapes: Array<Pie>
-  stage2d: Stage
-  option: any
 
   constructor(option: any, stage2d: Stage) {
+    super()
     this.option = option
     this.stage2d = stage2d
 
@@ -16,15 +16,11 @@ export default class ChartPie {
     this.setPie()
   }
 
-  precentToFloat (value: string) {
-		return parseInt(value.slice(0, -1)) / 100
-	}
-
   initOptions () {
+    // 初始化样式
+    this.initStyle()
 
-		const option = this.option
-
-		const stage2d = this.stage2d
+		const {option, stage2d, style} = this
 
 		//计算半径
 		if (typeof option.radius === 'undefined') {
@@ -42,42 +38,27 @@ export default class ChartPie {
       option.center[1] = Math.round(stage2d.height * this.precentToFloat(option.center[1]))
 		}
 
-		// //初始化前景画布配置
-		// let context = this.foregroundScene.context
-    //
-		// context.strokeStyle = "#ffffff"
-		// context.lineJoin = "bevel"
-		// context.miterLimit = 1
-		// context.textAlign = "center"
-		// context.textBaseline = "middle"
-		// context.font = this.style.font
-		// context.fillStyle = "#ffffff"
-
-
 		//如果没有图例，将值做为图例
 		if (typeof option.legend === 'undefined') {
 			option.legend = option.data
 		}
-
 
 		//创建饼图
 		this.shapes = []
 
     if (option.data && option.data.length) {
       option.data.forEach((item: number, index: number) => {
-        console.log("item, index", item, index);
         //创建一个饼形图
   			const shape = new Pie()
 
   			//设置饼形图属性
   			shape.stage2d = this.stage2d
-  			// shape.chart2d = this
   			shape.x = option.center[0]
   			shape.y = option.center[1]
   			shape.originalX = option.center[0]
   			shape.originalY = option.center[1]
-  			shape.pattern = option.style.colors[index]
-  			shape.mouseOverPattern = lighten(option.style.colors[index])
+  			shape.pattern = style.colors[index]
+  			shape.mouseOverPattern = lighten(style.colors[index])
   			shape.name = option.legend[index]
   			shape.value = item
   			shape.radius = option.radius
@@ -89,7 +70,7 @@ export default class ChartPie {
     }
 
 		//图例绘制所需数据
-		// this.initLegend()
+		this.initLegend()
 	}
 
   //计算饼形状绘制信息
@@ -121,48 +102,29 @@ export default class ChartPie {
 
 			eAngle += shape.precent / 50 * Math.PI
 
-			// shape.animate({
-			// 	eAngle,
-			// 	sAngle
-			// })
-
-      animater(shape, {
+      animate(shape, {
         eAngle,
 				sAngle
       })
 
 			sAngle = eAngle
 
-      const style = this.option.style
+      const style = this.style
 
 			//饼上的名称和值显示格式
 			if (typeof style.nameStyle === 'function') {
 				shape.nameText = style.nameStyle(shape.name, shape.value, shape.precent)
 			}
 			if (typeof style.nameStyle === 'string') {
-				shape.nameText = style.nameStyle.replace('{a}', shape.name).replace('{b}', shape.value).replace('{c}', Math.round(shape.precent))
+				shape.nameText = style.nameStyle.replace('{a}', shape.name).replace('{b}', shape.value.toString()).replace('{c}', Math.round(shape.precent).toString())
 			}
 			if (typeof style.valueStyle === 'function') {
 				shape.valueText = style.valueStyle(shape.name, shape.value, shape.precent)
 			}
 			if (typeof style.valueStyle === 'string') {
-				shape.valueText = style.valueStyle.replace('{a}', shape.name).replace('{b}', shape.value).replace('{c}', Math.round(shape.precent))
+				shape.valueText = style.valueStyle.replace('{a}', shape.name).replace('{b}', shape.value.toString()).replace('{c}', Math.round(shape.precent).toString())
 			}
 
 		})
-
-		console.log(this.shapes);
 	}
-
-  paint() {
-    const scene = this.stage2d.getScene()
-
-    console.log("context", scene.context);
-
-    scene.paint(() => {
-      this.shapes.forEach(shape => {
-        shape.paint(scene.context)
-      });
-    })
-  }
 }

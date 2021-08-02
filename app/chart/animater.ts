@@ -1,13 +1,3 @@
-// class Animater {
-//   //过渡动画
-//   animate(props, speed: Number = 400): void {
-//
-//   }
-//
-//
-//
-// }
-
 /*!
  * [easeOut 缓动函数]
  * @param  {[float]} t:timestamp [动画执行到当前帧所经过的时间] 如：0.3s
@@ -21,7 +11,7 @@ function easeOut(t: number, b: number, c: number, d: number) {
 }
 
 
-export function animater(shape: any, props: any, speed: number = 400) {
+export function animate(shape: any, props: any, speed: number = 400) {
 
   let lastIDOMHighResTimeStamp = 0
 
@@ -49,8 +39,8 @@ export function animater(shape: any, props: any, speed: number = 400) {
 
   const step = (iDOMHighResTimeStamp: number) => {
 
+    // 计算两次 requestAnimationFrame 的时间间隔
     const interval = iDOMHighResTimeStamp - lastIDOMHighResTimeStamp
-
     lastIDOMHighResTimeStamp = iDOMHighResTimeStamp
 
     time = time + interval
@@ -86,8 +76,6 @@ export function animater(shape: any, props: any, speed: number = 400) {
       requestAnimationFrame(step)
     }
   }
-
-  console.log("requestAnimationFrame", requestAnimationFrame);
 
   requestAnimationFrame(step)
 }

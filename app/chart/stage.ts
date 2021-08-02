@@ -2,6 +2,8 @@ import Queue from './queue';
 import Scene from './scene';
 import Point from './point';
 
+import { getPixelRatio } from '../utils/tool'
+
 //iDOMHighResTimeStamp
 let lastIDOMHighResTimeStamp = 0;
 
@@ -34,7 +36,7 @@ export default class Stage {
   public translateY: number = 0;
 
   // 设备像素比
-  private pixelRatio = 1; //pixelRatio;
+  public pixelRatio = 1; //pixelRatio;
 
   // 鼠标 X
   public mouseX: number = 0;
@@ -51,6 +53,8 @@ export default class Stage {
   // 当前帧距离上一帧的时间间隔
   public lastIDOMHighResTimeStamp: number = 0
 
+  public isVisibility: boolean = true
+
 
   private clickEventQueue = new Queue<Point>();
   private mouseupEventQueue = new Queue<Point>();
@@ -62,7 +66,23 @@ export default class Stage {
     this.width = container.clientWidth;
     this.height = container.clientHeight;
     this.container.style.position = 'relative';
+
+    const rect = container.getBoundingClientRect()
+
+    this.offsetX = rect.x
+    this.offsetY = rect.y
+
+    const context = document.createElement('canvas').getContext('2d')
+
+    if (context) {
+      this.setPixelRatio(context)
+    }
+
     this.initEventListener();
+
+    document.addEventListener("visibilitychange", () => {
+      this.isVisibility = document.visibilityState === 'visible'
+    })
   }
 
   //初始化事件监听
@@ -103,14 +123,15 @@ export default class Stage {
   }
 
 
-  //创建一个场景, 并返回 CanvasRenderingContext2D 句柄
+  //创建一个场景, 并返回 Scene
   getScene(): Scene {
     const scene = new Scene(this)
     this.scenes.push(scene)
-
-    console.log("scene", scene);
-
     return scene
+  }
+
+  setPixelRatio(context: CanvasRenderingContext2D) {
+    this.pixelRatio = getPixelRatio(context)
   }
 
   //添加一个图表

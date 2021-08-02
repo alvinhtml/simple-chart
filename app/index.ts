@@ -1,3 +1,3 @@
-import {Chart} from '~/chart/charts'
+import { Charts } from '~/chart/charts'
 
-export default Chart;
+export default Charts;

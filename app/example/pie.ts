@@ -39,8 +39,10 @@ let pieOption = {
         nameStyle: '{a} {c}%',
 
         //图例,
-        legend: 'top' // 'top'
-
+        legend: {
+          orient: 'horizontal', // horizontal or vertical
+          position: ['center', 'bottom']
+        }
     },
 
     //半径
