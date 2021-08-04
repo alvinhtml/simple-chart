@@ -16,9 +16,6 @@ export class Charts {
   //图形列表
   charts: Array<any> = []
 
-  //事件列表
-  eventList = []
-
   //需要复原的动画
   recoverAnimateList = []
 
@@ -45,35 +42,25 @@ export class Charts {
         break;
     }
 
-
-
-
     this.render()
   }
 
-  setPie(option: Object) {
+  setPie(option: any) {
     const pie = new ChartPie(option, this.stage2d)
 
     this.charts.push(pie)
   }
 
   render() {
-    this.charts.forEach((item) => {
-      item.paint()
+    this.charts.forEach((chart) => {
+      chart.paint()
     })
-
-    // 处理数据
-    // 生成精灵 push 到 scene -> push 到 stage2d
-    // rander  stage2d.rander
-
   }
 
-  //绑定事件
-  // addEventListener (event: string, callback: Function) {
-    // this.chartList.forEach((chart) => {
-    //   chart.addEventListener(event, callback)
-    // })
-  // }
+  // 绑定事件
+  addEventListener(event: string, callback: Function) {
+    this.stage2d.addEventListener(event, callback)
+  }
 
   //开启 tips
   // tip (format) {

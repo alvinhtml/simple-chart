@@ -1,7 +1,6 @@
 import Stage from "./stage";
 import Chart from "./chart";
 import { Pie } from './shape/index'
-import { animate } from './animater'
 import { lighten, darken } from '../utils/tool'
 
 export default class ChartPie extends Chart {
@@ -53,6 +52,7 @@ export default class ChartPie extends Chart {
 
   			//设置饼形图属性
   			shape.stage2d = this.stage2d
+        shape.chart2d = this
   			shape.x = option.center[0]
   			shape.y = option.center[1]
   			shape.originalX = option.center[0]
@@ -102,7 +102,7 @@ export default class ChartPie extends Chart {
 
 			eAngle += shape.precent / 50 * Math.PI
 
-      animate(shape, {
+      shape.animate({
         eAngle,
 				sAngle
       })

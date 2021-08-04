@@ -1,6 +1,8 @@
-import Queue from './queue';
-import Scene from './scene';
-import Point from './point';
+import Queue from './queue'
+import Scene from './scene'
+import Point from './point'
+import Event2d from './event'
+import { CLICK, MOUSEUP, MOUSEDOWN, MOUSEMOVE, MOUSESCROLL } from '../constants'
 
 import { getPixelRatio } from '../utils/tool'
 
@@ -25,9 +27,6 @@ export default class Stage {
   public offsetX: number;
   public offsetY: number;
 
-  // 侦听器容器
-  private events = [];
-
   // 当前舞台的缩放
   public scale = 1
 
@@ -51,21 +50,23 @@ export default class Stage {
   public pageY: number = 0;
 
   // 当前帧距离上一帧的时间间隔
-  public lastIDOMHighResTimeStamp: number = 0
+  public interval: number = 0
 
   public isVisibility: boolean = true
 
+  public clickPointQueue = new Queue<Point>()
+  public mouseupPointQueue = new Queue<Point>()
+  public mousedownPointQueue = new Queue<Point>()
+  public mousemovePointQueue = new Queue<Point>()
 
-  private clickEventQueue = new Queue<Point>();
-  private mouseupEventQueue = new Queue<Point>();
-  private mousedownEventQueue = new Queue<Point>();
-  private mousemoveEventQueue = new Queue<Point>();
+  //事件列表
+  public events: Array<Event2d>
 
   constructor(container: HTMLDivElement) {
-    this.container = container;
-    this.width = container.clientWidth;
-    this.height = container.clientHeight;
-    this.container.style.position = 'relative';
+    this.container = container
+    this.width = container.clientWidth
+    this.height = container.clientHeight
+    this.container.style.position = 'relative'
 
     const rect = container.getBoundingClientRect()
 
@@ -78,11 +79,15 @@ export default class Stage {
       this.setPixelRatio(context)
     }
 
-    this.initEventListener();
+    this.events = []
+
+    this.initEventListener()
 
     document.addEventListener("visibilitychange", () => {
       this.isVisibility = document.visibilityState === 'visible'
     })
+
+    this.requestAnimationFrame()
   }
 
   //初始化事件监听
@@ -97,7 +102,7 @@ export default class Stage {
     }, false)
 
     this.container.addEventListener("click", (e: MouseEvent) => {
-      this.clickEventQueue.enqueue(new Point(this.mouseX, this.mouseY));
+      this.clickPointQueue.enqueue(new Point(this.mouseX, this.mouseY));
     }, false);
 
     this.container.addEventListener("mousemove", (e: MouseEvent) => {
@@ -106,7 +111,7 @@ export default class Stage {
       this.mouseX = (e.pageX - this.offsetX) * this.pixelRatio;
       this.mouseY = (e.pageY - this.offsetY) * this.pixelRatio;
 
-      this.mousemoveEventQueue.enqueue(new Point(this.mouseX, this.mouseY));
+      this.mousemovePointQueue.enqueue(new Point(this.mouseX, this.mouseY));
     }, false);
 
     //缩放事件
@@ -133,6 +138,61 @@ export default class Stage {
   setPixelRatio(context: CanvasRenderingContext2D) {
     this.pixelRatio = getPixelRatio(context)
   }
+
+  addEventListener(event: string, callback: Function) {
+    let eventConst
+
+    switch (event) {
+      case 'click':
+        eventConst = CLICK
+        break;
+
+      case 'mouseup':
+        eventConst = MOUSEUP
+        break;
+
+      case 'mousedown':
+        eventConst = MOUSEDOWN
+        break;
+
+      case 'mousemove':
+        eventConst = MOUSEMOVE
+        break;
+
+      case 'DOMMouseScroll':
+        eventConst = MOUSESCROLL
+        break;
+
+      default:
+        eventConst = CLICK
+        break;
+    }
+
+    this.events.push(new Event2d(eventConst, callback))
+
+    console.log("this.events", this.events);
+  }
+
+  clearEventPoint() {
+    this.clickPointQueue.clear()
+    this.mouseupPointQueue.clear()
+    this.mousedownPointQueue.clear()
+    this.mousemovePointQueue.clear()
+  }
+
+  requestAnimationFrame() {
+    const frame = (iDOMHighResTimeStamp: number) => {
+
+      //计算每次绘制的时间间隔
+      this.interval = iDOMHighResTimeStamp - lastIDOMHighResTimeStamp
+      lastIDOMHighResTimeStamp = iDOMHighResTimeStamp
+
+      requestAnimationFrame(frame)
+    }
+    requestAnimationFrame(frame)
+  }
+
+
 
   //添加一个图表
   // addChart (chart) {
@@ -187,11 +247,11 @@ export default class Stage {
   //   });
   //
   //   //释放鼠标点击坐标点
-  //   if (!this.clickEventQueue.isEmpty()) this.clickEventQueue.dequeue()
+  //   if (!this.clickPointQueue.isEmpty()) this.clickPointQueue.dequeue()
   //
   //   //释放鼠标移动坐标点
-  //   if (!this.mousemoveEventQueue.isEmpty()) {
-  //     this.mousemoveEventQueue.dequeue()
+  //   if (!this.mousemovePointQueue.isEmpty()) {
+  //     this.mousemovePointQueue.dequeue()
   //     this.chartList.forEach((chart) => {
   //       //鼠标移到 chart 图外，清除 tip
   //       chart.clearTip()

@@ -28,7 +28,7 @@ export default class Scene {
     this.context.strokeStyle = '#ffffff'
 		this.context.lineJoin = 'bevel'
 		this.context.miterLimit = 1
-		this.context.textAlign = 'left'
+		this.context.textAlign = 'center'
 		this.context.textBaseline = 'middle'
 		this.context.font = style.font
 		this.context.fillStyle = '#ffffff'
@@ -56,6 +56,8 @@ export default class Scene {
         fn(this.context)
 
         this.context.restore()
+
+        this.stage2d.clearEventPoint()
       }
 
       //需要重复绘制的内容

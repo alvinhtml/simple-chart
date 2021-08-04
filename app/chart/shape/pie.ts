@@ -11,54 +11,54 @@ import Shape from './shape'
 //饼状图
 export default class Pie extends Shape {
   //类型
-  type = 'pie'
+  type: string = 'pie'
 
   //形状的初始X坐标
-  originalX = 0
+  originalX: number = 0
 
   //形状的初始Y坐标
-  originalY = 0
+  originalY: number = 0
 
   //形状的X坐标
-  x = 0
+  x: number = 0
 
   //形状的Y坐标
-  y = 0
+  y: number = 0
 
   //填充颜色或图案
-  pattern = '#ffffff'
+  pattern: string = '#ffffff'
 
   //填充颜色或图案 mouseover
-  mouseOverPattern = '#ffffff'
+  mouseOverPattern: string = '#ffffff'
 
   //名称
-  name = ''
+  name: string = ''
 
   //值
-  value = 0
+  value: number = 0
 
   //半径
-  radius = 0
+  radius: number = 0
 
   //百分比
-  precent = 0
+  precent: number = 0
 
   //起始角，以弧度计
-  sAngle = 0
+  sAngle: number = 0
 
   //结束角，以弧度计
-  eAngle = 0
+  eAngle: number = 0
 
   //名称信息, 决定是否在饼外显示名称
-  nameText = ''
-  nameStyle = ''
+  nameText: string = ''
+  nameStyle: string = ''
 
   //值信息, 决定是否在饼上显示值或百分比
-  valueText = ''
-  valueStyle = ''
+  valueText: string = ''
+  valueStyle: string = ''
 
   //临时禁用
-  disable = 0
+  disable: boolean = false
 
   constructor() {
     super()
@@ -66,28 +66,26 @@ export default class Pie extends Shape {
 
   //点击动画
   clickAnimate() {
+    //计算饼形中线弧度
+    const radian = (this.eAngle - this.sAngle) / 2 + this.sAngle + (0.5 * Math.PI)
 
-    // //计算饼形中线弧度
-    // let radian = (this.eAngle - this.sAngle) / 2 + this.sAngle  + (0.5 * Math.PI)
-    //
-    // //计算移动后的圆心坐标
-    // let x = this.x + Math.sin(radian) * 10
-    // let y = this.y - Math.cos(radian) * 10
-    //
-    // //先记录当前 shape 和圆心坐标，复原时用
-    // this.chart2d.addRecoverAnimate(this, {
-    //     x: this.x,
-    //     y: this.y
-    // })
-    //
-    // //开始播放移动动画
-    // this.animate({
-    //     x,
-    //     y
-    // })
-    //
-    // this.recoverAnimateIng = true
+    //计算移动后的圆心坐标
+    const x = this.x + Math.sin(radian) * 10
+    const y = this.y - Math.cos(radian) * 10
 
+    //先记录当前 shape 和圆心坐标，复原时用
+    this.chart2d.addRecoverShapes(this, {
+      x: this.x,
+      y: this.y
+    })
+
+    //开始播放移动动画
+    this.animate({
+      x,
+      y
+    })
+
+    this.recoverAnimateIng = true
   }
 
   //绘制饼形
@@ -98,13 +96,13 @@ export default class Pie extends Shape {
     //对于饼状图，xy是圆的中心
     context.moveTo(this.x, this.y)
 
-    context.arc(this.x, this.y, this.radius, this.sAngle,  this.eAngle)
+    context.arc(this.x, this.y, this.radius, this.sAngle, this.eAngle)
 
     context.closePath()
 
     if (context.isPointInPath(this.stage2d.mouseX, this.stage2d.mouseY)) {
       context.fillStyle = this.mouseOverPattern
-      // this.eventDetection()
+      this.triggerEvent()
     } else {
       context.fillStyle = this.pattern
     }

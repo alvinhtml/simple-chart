@@ -1,6 +1,5 @@
 import Stage from "./stage";
 import { Legend } from './shape/index'
-import { animate } from './animater'
 import { lighten, darken } from '../utils/tool'
 
 // interface Styles {
@@ -25,6 +24,13 @@ import { lighten, darken } from '../utils/tool'
 //   legend?: Array<string>
 // }
 
+interface Recover {
+  shape: any,
+  props: {
+    [k: string]: number
+  }
+}
+
 export default class Chart {
   // stage
   stage2d: Stage
@@ -33,7 +39,7 @@ export default class Chart {
   shapes: Array<any>
 
   // 记录需要复原的图形信息, 供播放复原动画使用
-  recoverShapes: Array<any> = []
+  recoverShapes: Array<Recover> = []
 
   // 记录需要复原的图形信息, 供播放复原动画使用
   legends: Array<any> = []
@@ -79,6 +85,7 @@ export default class Chart {
       const legend = new Legend()
 
       legend.stage2d = this.stage2d
+      legend.chart2d = this
       legend.name = name
       legend.pattern = option.style.colors[index]
       legend.mouseOverPattern = lighten(option.style.colors[index])
@@ -156,7 +163,6 @@ export default class Chart {
     this.legends.forEach(legend => {
       legend.x = legend.x + offsetX
       legend.y = legend.y + offsetY
-      console.log("legend", legend);
     });
   }
 
@@ -177,10 +183,19 @@ export default class Chart {
     })
   }
 
-  //复原图形
+  // 添加待复原图形
+  addRecoverShapes(shape: any, props: {[k: string]: number}) {
+    this.recoverShapes.push({
+      shape,
+      props
+    })
+  }
+
+  // 复原图形
   recover() {
     this.recoverShapes.forEach((v) => {
-      animate(v.shape, v.option)
+      v.shape.animate(v.props)
     })
+    this.recoverShapes = []
   }
 }

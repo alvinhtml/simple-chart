@@ -83,7 +83,7 @@ export default class Legend extends Shape {
       context.fillStyle = '#000'
     }
 
-    context.fillText(this.name, this.x + 14, this.y)
+    context.fillText(this.name, this.x + 4 + this.width / 2, this.y)
 
     context.stroke()
 

@@ -56,7 +56,6 @@ let pieOption = {
 
     //图例对应的数据集
     data: [334, 211, 186, 412, 218, 162, 128]
-
 }
 
 // chart.setOption({
@@ -90,9 +89,10 @@ chart.setOption(pieOption);
 //     return a + ':' + b
 // })
 //
-// chart.addEventListener('click', (e) => {
-//     console.log(e.name, e.value)
-// })
+
+chart.addEventListener('click', (e: any) => {
+    console.log('click e: ', e.target.name)
+})
 
 //
 // let myChartLine = document.createElement('div')
