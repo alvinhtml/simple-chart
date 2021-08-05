@@ -87,6 +87,7 @@ export default class Chart {
       legend.stage2d = this.stage2d
       legend.chart2d = this
       legend.name = name
+      legend.shape = this.shapes[index]
       legend.pattern = option.style.colors[index]
       legend.mouseOverPattern = lighten(option.style.colors[index])
 

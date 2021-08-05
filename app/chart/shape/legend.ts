@@ -26,37 +26,33 @@ export default class Legend extends Shape {
   //值
   value = 0
 
-  //临时禁用
-  disable = 0
+  shape: any
 
   constructor() {
     super()
+    this.type = 'legend'
   }
 
   //点击动画
   clickAnimate() {
+    this.disabled = !this.disabled
 
-    // //计算饼形中线弧度
-    // let radian = (this.eAngle - this.sAngle) / 2 + this.sAngle  + (0.5 * Math.PI)
-    //
-    // //计算移动后的圆心坐标
-    // let x = this.x + Math.sin(radian) * 10
-    // let y = this.y - Math.cos(radian) * 10
-    //
-    // //先记录当前 shape 和圆心坐标，复原时用
-    // this.chart2d.addRecoverAnimate(this, {
-    //     x: this.x,
-    //     y: this.y
-    // })
-    //
-    // //开始播放移动动画
-    // this.animate({
-    //     x,
-    //     y
-    // })
-    //
-    // this.recoverAnimateIng = true
+    const shape = this.shape
 
+    if (this.disabled) {
+      this.shape.disabled = true
+    } else {
+      this.shape.disabled = false
+    }
+
+    switch (this.shape.type) {
+      case 'pie':
+        this.chart2d.setPie()
+        break;
+
+      default:
+        break;
+    }
   }
 
   paint(context: CanvasRenderingContext2D) {
@@ -70,13 +66,12 @@ export default class Legend extends Shape {
     context.arc(this.x + 5, this.y, 5, 0, Math.PI * 2)
 
     if (context.isPointInPath(this.stage2d.mouseX, this.stage2d.mouseY)) {
-      // console.log("context.isPointInPath", 1);
       context.arc(this.x + 5, this.y, 6, 0, Math.PI * 2)
-      // this.legendClick(legend)
+      this.triggerEvent()
     }
     context.closePath()
 
-    if (this.disable) {
+    if (this.disabled) {
       context.fillStyle = '#c9c9c9'
       context.strokeStyle = '#c9c9c9'
     } else {

@@ -13,7 +13,13 @@ interface ChartEvent {
 export default class Shape {
   recoverAnimateIng = false
   stage2d: Stage
-  chart2d: Chart
+  chart2d: any
+
+  // 类型
+  type: string
+
+  //临时禁用
+  disabled: boolean = false
 
   constructor() {
 

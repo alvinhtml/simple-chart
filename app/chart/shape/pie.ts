@@ -10,9 +10,6 @@ import Shape from './shape'
 
 //饼状图
 export default class Pie extends Shape {
-  //类型
-  type: string = 'pie'
-
   //形状的初始X坐标
   originalX: number = 0
 
@@ -57,11 +54,9 @@ export default class Pie extends Shape {
   valueText: string = ''
   valueStyle: string = ''
 
-  //临时禁用
-  disable: boolean = false
-
   constructor() {
     super()
+    this.type = 'pie'
   }
 
   //点击动画
@@ -121,14 +116,14 @@ export default class Pie extends Shape {
     // 计算饼形中线弧度
     let radian = (this.eAngle - this.sAngle) / 2 + this.sAngle + (0.5 * Math.PI)
 
-    if (!this.disable) {
+    if (!this.disabled) {
       //绘制数据值
       let x = this.x + Math.sin(radian) * (this.radius * .7)
       let y = this.y - Math.cos(radian) * (this.radius * .7)
       context.fillText(this.valueText, x, y)
     }
 
-    if (!this.disable) {
+    if (!this.disabled) {
       //开始绘制名称，计算名称指引线开始坐标 (sx, xy) 和结束坐标 (ex, ey)
       let sx = this.originalX + Math.sin(radian) * (this.radius + 4)
       let sy = this.originalY - Math.cos(radian) * (this.radius + 4)

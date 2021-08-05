@@ -78,7 +78,7 @@ export default class ChartPie extends Chart {
 
 		//总计
 		const total = this.shapes.reduce((num, shape) => {
-      if (!shape.disable) {
+      if (!shape.disabled) {
 				num += shape.value
 			}
       return num
@@ -94,7 +94,7 @@ export default class ChartPie extends Chart {
 		this.shapes.forEach((shape) => {
 
       //算出百分比
-			if (shape.disable) {
+			if (shape.disabled) {
 				shape.precent = 0
 			} else {
 				shape.precent = shape.value / total * 100
