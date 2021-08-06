@@ -1,6 +1,6 @@
-import Stage from "./stage";
-// import Scene from "./scene";
-import ChartPie from './chartPie';
+import Stage from "./stage"
+import ChartPie from './chartPie'
+import ChartBar from './chartBar'
 
 /*!
  * [constructor 图表类]
@@ -33,23 +33,28 @@ export class Charts {
   setOption({type, ...option}: any) {
     this.charts = []
 
+    let chart
+
     switch (type) {
       case 'pie':
-        this.setPie(option)
+        chart = new ChartPie(option, this.stage2d)
+        break;
+
+      case 'bar':
+        chart = new ChartBar(option, this.stage2d)
         break;
 
       default:
         break;
     }
 
+    this.charts.push(chart)
     this.render()
   }
 
-  setPie(option: any) {
-    const pie = new ChartPie(option, this.stage2d)
-
-    this.charts.push(pie)
-  }
+  // setPie(option: any) {
+  //
+  // }
 
   render() {
     this.charts.forEach((chart) => {

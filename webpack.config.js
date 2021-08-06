@@ -5,7 +5,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 module.exports = {
   entry: {
     index: ['./node_modules/hidpi-canvas/dist/hidpi-canvas.min.js', './app/index.ts'],
-    pie: './app/example/pie.ts'
+    pie: './app/example/pie.ts',
+    bar: './app/example/bar.ts'
   },
   output: {
     filename: '[name].js',
@@ -65,8 +66,14 @@ module.exports = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: './app/example/index.html',
-      filename: 'pie.html'
+      template: './app/index.html',
+      chunks: ['index', 'pie'],
+      filename: './example/pie.html'
+    }),
+    new HtmlWebpackPlugin({
+      template: './app/index.html',
+      chunks: ['index', 'bar'],
+      filename: './example/bar.html'
     })
   ],
   devServer: {

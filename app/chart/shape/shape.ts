@@ -11,15 +11,22 @@ interface ChartEvent {
 }
 
 export default class Shape {
-  recoverAnimateIng = false
   stage2d: Stage
   chart2d: any
 
   // 类型
   type: string
 
+  //形状的X坐标
+  x: number = 0
+
+  //形状的Y坐标
+  y: number = 0
+
   //临时禁用
   disabled: boolean = false
+
+  recoverAnimateIng = false
 
   constructor() {
 

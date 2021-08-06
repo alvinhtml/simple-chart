@@ -66,4 +66,32 @@ export default class Scene {
 
     requestAnimationFrame(frame);
   }
+
+  paintOnce(fn: Function) {
+    const frame = () => {
+      // 判断浏览器选项卡的内容是否可见
+      if (this.stage2d.isVisibility) {
+        const {width, height, translateX, translateY, scale} = this.stage2d
+
+        //清理画面
+        this.context.clearRect(0, 0, width, height)
+
+        //重置画布的透明度
+        this.context.globalAlpha = 1
+
+        this.context.save()
+
+        //重新设定画布偏移和缩放
+        this.context.translate(translateX, translateY)
+
+        this.context.scale(scale, scale)
+
+        fn(this.context)
+
+        this.context.restore()
+      }
+    }
+
+    requestAnimationFrame(frame);
+  }
 }

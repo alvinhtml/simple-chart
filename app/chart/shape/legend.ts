@@ -5,12 +5,6 @@ export default class Legend extends Shape {
   //类型
   type = 'legend'
 
-  //形状的X坐标
-  x = 0
-
-  //形状的Y坐标
-  y = 0
-
   //形状的宽
   width = 0
 

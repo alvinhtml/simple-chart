@@ -16,12 +16,6 @@ export default class Pie extends Shape {
   //形状的初始Y坐标
   originalY: number = 0
 
-  //形状的X坐标
-  x: number = 0
-
-  //形状的Y坐标
-  y: number = 0
-
   //填充颜色或图案
   pattern: string = '#ffffff'
 

@@ -26,15 +26,3 @@ npm run build
 ```bash
 npm install simple-chart --save
 ```
-
-## 设计文档
-
-- Chart
-  - setOption
-  - addEventListener
-- stage2d - canvas container
-  - getScene - return scene and added
-- Scene - canvas
-  - scene.paint(RenderFn)
-- CharePie
-  - setPie

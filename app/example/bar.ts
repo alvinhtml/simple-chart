@@ -10,7 +10,7 @@ document.body.appendChild(myChart);
 // Pie
 let pieOption = {
 
-    type: 'pie',   // 'line', 'bar', 'radar', 'gauge'
+    type: 'bar',   // 'line', 'bar', 'radar', 'gauge'
 
     //样式
     style: {
@@ -41,7 +41,7 @@ let pieOption = {
         //图例,
         legend: {
           orient: 'horizontal', // horizontal or vertical
-          position: ['center', 'bottom']
+          position: ['center', 'top']
         }
     },
 
@@ -52,30 +52,32 @@ let pieOption = {
     center: ['50%', '50%'],  // ['50%', '50%'], [200, 200]
 
     //图例
-    legend: ['台式电脑', '笔记本', '平板电脑', '手机', '交换机', '路由器', '服务器'],
+    legend: ['React', 'Vue', 'Angular'],
+
+    //图例
+    padding: [60, 20 ,40 , 80],
+
+    //图例
+    xAxis: {
+      type: 'category',
+      data: ['January', 'February', 'March', 'April', 'May', 'June', 'July']
+    },
+
+    yAxis: {
+      type: 'value',
+    },
 
     //图例对应的数据集
-    data: [334, 211, 186, 412, 218, 162, 128]
+    data: [
+      [334, 513, 126],
+      [211, 413, 78],
+      [186, 274, 160],
+      [412, 317, 200],
+      [218, 500, 180],
+      [162, 272, 80],
+      [128, 457, 180]
+    ]
 }
-
-// chart.setOption({
-//     scale: true, //是否允许缩放
-//     type: 'pie',
-//     name: '访问来源',
-//     radius : '60%',
-//     center: ['50%', '50%'],
-//     data:[
-//         {value:335, name:'直接访问'},
-//         {value:810, name:'邮件营销'},
-//         {value:234, name:'联盟广告'},
-//         {value:135, name:'视频广告'},
-//         {value:548, name:'搜索引擎'},
-//         {value:448, name:'搜索引擎'},
-//         {value:548, name:'搜索引擎2'},
-//         {value:348, name:'搜索引擎3'}
-//     ],
-// })
-
 
 const chart = new Chart(myChart);
 
@@ -117,7 +119,8 @@ chart.addEventListener('click', (e: any) => {
 //     radius : '60%', // 60% , 150
 //
 //     //圆心位置
-//     center: ['50%', '50%'],  // ['50%', '50%'], [200, 200]
+//     center: ['50%', '50%'],
+ // ['50%', '50%'], [200, 200]
 //
 //     //x轴
 //     xAxis: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
