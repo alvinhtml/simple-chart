@@ -1,4 +1,5 @@
 import Stage from "./stage";
+import Scene from './scene'
 import { Legend, Axis } from './shape/index'
 import { lighten, darken } from '../utils/tool'
 
@@ -35,6 +36,8 @@ export default class Chart {
   // stage
   stage2d: Stage
 
+  type: string
+
   // 图形容器
   shapes: Array<any>
 
@@ -60,6 +63,9 @@ export default class Chart {
   }
 
   padding: Array<number> = [40, 20 ,40 , 60]
+
+  // 坐标轴画面
+  axisScene: Scene
 
   initStyle() {
     if (this.option.style) {
@@ -89,9 +95,21 @@ export default class Chart {
       legend.stage2d = this.stage2d
       legend.chart2d = this
       legend.name = name
-      legend.shape = this.shapes[index]
       legend.pattern = option.style.colors[index]
       legend.mouseOverPattern = lighten(option.style.colors[index])
+
+      switch (this.type) {
+        case 'pie':
+          legend.binders = [this.shapes[index]]
+          break;
+
+        case 'bar':
+          legend.binders = this.shapes.map(v => v[index])
+          break;
+
+        default:
+          break;
+      }
 
       return legend
     })
@@ -175,10 +193,8 @@ export default class Chart {
 
     this.setLegend(scene.context)
 
-    console.log("this.shapes", this.shapes);
-
     scene.paint(() => {
-      this.shapes.forEach(shape => {
+      this.shapes.flat().forEach(shape => {
         // console.log("shape", shape);
         shape.paint(scene.context)
       });
@@ -189,33 +205,33 @@ export default class Chart {
     })
   }
 
-  paintAxis(): number[] {
-    console.log("222", 222);
+  paintAxis(data: any[]): number[] {
     const option = this.option
 
     const axis = new Axis()
 
-    console.log("axis", axis);
     axis.width = this.stage2d.width - this.padding[1] - this.padding[3];
     axis.height = this.stage2d.height - this.padding[0] - this.padding[2];
     axis.x = this.padding[3]
     axis.y = this.padding[0]
     axis.xLabel = option.xAxis.data
 
-    const flatValues = option.data.flat()
+    const flatValues = data.flat()
     const maxValue = Math.max.apply(null, flatValues)
     const minValue = Math.min(...flatValues)
 
     axis.yLabel = this.getScaleMark(maxValue, minValue)
 
 
+    if (!this.axisScene) {
+      // 创建坐标轴画布
+      const scene = this.stage2d.getScene()
+      this.axisScene = scene
+      scene.initContext(this.option.style)
+    }
 
-    // 创建坐标轴画布
-    const scene = this.stage2d.getScene()
-    scene.initContext(this.option.style)
-
-    scene.paintOnce(() => {
-      axis.paint(scene.context)
+    this.axisScene.paintOnce(() => {
+      axis.paint(this.axisScene.context)
     })
 
     return [axis.yLabel[0], axis.yLabel[axis.yLabel.length - 1]]
@@ -281,5 +297,21 @@ export default class Chart {
       v.shape.animate(v.props)
     })
     this.recoverShapes = []
+  }
+
+  // 重置
+  reset() {
+    switch (this.type) {
+      case 'pie':
+        (this as any).setPie()
+        break;
+
+      case 'bar':
+        (this as any).setBar()
+        break;
+
+      default:
+        break;
+    }
   }
 }

@@ -10,6 +10,7 @@ export default class ChartPie extends Chart {
     super()
     this.option = option
     this.stage2d = stage2d
+    this.type = option.type
 
     this.initOptions()
     this.setPie()

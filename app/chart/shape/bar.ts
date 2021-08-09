@@ -64,15 +64,20 @@ export default class Bar extends Shape {
 
   paint(context: CanvasRenderingContext2D) {
 
+    if (this.width === 0) {
+      return false
+    }
+
+
+
     //保存画布句柄，开始绘制饼形
     context.save()
-
     context.beginPath()
 
     //对于饼状图，xy是圆的中心
     context.moveTo(this.x, this.y)
 
-    context.rect(this.x, this.y, this.width, this.height)
+    context.rect(this.x, this.y - this.height, this.width, this.height)
 
     context.closePath()
 
@@ -85,31 +90,11 @@ export default class Bar extends Shape {
 
     context.strokeStyle = this.pattern
 
+    //绘制名称
+    context.fillText(this.value.toString(), this.x + this.width / 2, this.y - this.height - 8)
+
     context.stroke()
     context.fill()
-
-
-
-
-    // context.strokeStyle = this.pattern
-    //
-    // context.beginPath()
-    // context.arc(this.x + 5, this.y, 5, 0, Math.PI * 2)
-    //
-    // if (context.isPointInPath(this.stage2d.mouseX, this.stage2d.mouseY)) {
-    //   context.arc(this.x + 5, this.y, 6, 0, Math.PI * 2)
-    //   this.triggerEvent()
-    // }
-    // context.closePath()
-    //
-    // if (this.disabled) {
-    //   context.fillStyle = '#c9c9c9'
-    //   context.strokeStyle = '#c9c9c9'
-    // } else {
-    //   context.fillStyle = '#000'
-    // }
-    //
-    // context.fillText(this.name, this.x + 4 + this.width / 2, this.y)
 
     context.restore()
   }

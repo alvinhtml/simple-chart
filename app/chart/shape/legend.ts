@@ -20,7 +20,8 @@ export default class Legend extends Shape {
   //值
   value = 0
 
-  shape: any
+  // 相关联的形状
+  binders: any[]
 
   constructor() {
     super()
@@ -31,22 +32,11 @@ export default class Legend extends Shape {
   clickAnimate() {
     this.disabled = !this.disabled
 
-    const shape = this.shape
+    this.binders.forEach(item => {
+      item.disabled = this.disabled
+    })
 
-    if (this.disabled) {
-      this.shape.disabled = true
-    } else {
-      this.shape.disabled = false
-    }
-
-    switch (this.shape.type) {
-      case 'pie':
-        this.chart2d.setPie()
-        break;
-
-      default:
-        break;
-    }
+    this.chart2d.reset()
   }
 
   paint(context: CanvasRenderingContext2D) {

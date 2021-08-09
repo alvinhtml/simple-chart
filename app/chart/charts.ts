@@ -30,8 +30,10 @@ export class Charts {
     }
   }
 
-  setOption({type, ...option}: any) {
+  setOption(option: any) {
     this.charts = []
+
+    const type = option.type
 
     let chart
 

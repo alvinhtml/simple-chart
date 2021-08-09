@@ -169,8 +169,6 @@ export default class Stage {
     }
 
     this.events.push(new Event2d(eventConst, callback))
-
-    console.log("this.events", this.events);
   }
 
   clearEventPoint() {
