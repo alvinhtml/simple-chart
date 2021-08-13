@@ -74,7 +74,6 @@ export default class Bar extends Shape {
     context.save()
     context.beginPath()
 
-    //对于饼状图，xy是圆的中心
     context.moveTo(this.x, this.y)
 
     context.rect(this.x, this.y - this.height, this.width, this.height)

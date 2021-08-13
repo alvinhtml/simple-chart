@@ -27,6 +27,12 @@ export function darken(hex: string): string {
   return rgbToHex(arr[0], arr[1], arr[2])
 }
 
+export function alpha(hex: string, a: number): string {
+  const rgb = hexToRgb(hex)
+
+  return `rgba(${rgb[0]}, ${rgb[1]}, ${rgb[2]}, ${a})`
+}
+
 export function getPixelRatio(context: CanvasRenderingContext2D) {
     // const backingStore = context.backingStorePixelRatio ||
     //       context.webkitBackingStorePixelRatio ||

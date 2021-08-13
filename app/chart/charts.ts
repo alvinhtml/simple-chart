@@ -1,6 +1,7 @@
 import Stage from "./stage"
 import ChartPie from './chartPie'
 import ChartBar from './chartBar'
+import ChartLine from './chartLine'
 
 /*!
  * [constructor 图表类]
@@ -44,6 +45,10 @@ export class Charts {
 
       case 'bar':
         chart = new ChartBar(option, this.stage2d)
+        break;
+
+      case 'line':
+        chart = new ChartLine(option, this.stage2d)
         break;
 
       default:

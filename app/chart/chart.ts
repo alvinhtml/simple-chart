@@ -107,6 +107,10 @@ export default class Chart {
           legend.binders = this.shapes.map(v => v[index])
           break;
 
+        case 'line':
+          legend.binders = this.shapes[index]
+          break;
+
         default:
           break;
       }
@@ -117,7 +121,6 @@ export default class Chart {
 
   setLegend(context: CanvasRenderingContext2D) {
     const legend = this.option ?.style ?.legend
-
 
     if (!legend) {
       return false
@@ -216,12 +219,11 @@ export default class Chart {
     axis.y = this.padding[0]
     axis.xLabel = option.xAxis.data
 
-    const flatValues = data.flat()
+    const flatValues = data.flat().flat()
     const maxValue = Math.max.apply(null, flatValues)
     const minValue = Math.min(...flatValues)
 
     axis.yLabel = this.getScaleMark(maxValue, minValue)
-
 
     if (!this.axisScene) {
       // 创建坐标轴画布
@@ -308,6 +310,10 @@ export default class Chart {
 
       case 'bar':
         (this as any).setBar()
+        break;
+
+      case 'line':
+        (this as any).setLine()
         break;
 
       default:

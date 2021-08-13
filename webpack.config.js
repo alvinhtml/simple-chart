@@ -6,7 +6,8 @@ module.exports = {
   entry: {
     index: ['./node_modules/hidpi-canvas/dist/hidpi-canvas.min.js', './app/index.ts'],
     pie: './app/example/pie.ts',
-    bar: './app/example/bar.ts'
+    bar: './app/example/bar.ts',
+    line: './app/example/line.ts',
   },
   output: {
     filename: '[name].js',
@@ -74,6 +75,11 @@ module.exports = {
       template: './app/index.html',
       chunks: ['index', 'bar'],
       filename: './example/bar.html'
+    }),
+    new HtmlWebpackPlugin({
+      template: './app/index.html',
+      chunks: ['index', 'line'],
+      filename: './example/line.html'
     })
   ],
   devServer: {
