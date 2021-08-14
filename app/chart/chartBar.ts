@@ -56,8 +56,11 @@ export default class ChartBar extends Chart {
       })
     }
 
-    //图例绘制所需数据
+    // 图例绘制所需数据
     this.initLegend()
+
+    // 开启信息提示框
+    this.initTip()
   }
 
   //计算饼形状绘制信息

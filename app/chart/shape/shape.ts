@@ -10,6 +10,19 @@ interface ChartEvent {
   target: Shape
 }
 
+
+interface Indexed {
+  [prop: string]:
+  | number
+  | string
+  | (<K extends keyof this,
+    T extends {
+      [key in K]: number
+    }>(props: T) => void)
+}
+
+type Values<T> = T[keyof T]
+
 export default class Shape {
   stage2d: Stage
   chart2d: any
@@ -22,6 +35,10 @@ export default class Shape {
 
   //形状的Y坐标
   y: number = 0
+
+  width: number = 0
+
+  height: number = 0
 
   //临时禁用
   disabled: boolean = false
@@ -41,24 +58,23 @@ export default class Shape {
   }
 
   animate<
-    K extends keyof this,
-    T extends {
-      [key in K]: number;
-    },
-  >(props: Partial<T>, speed: number = 400) {
+    Keys extends PropertyKey,
+    Value extends number,
+    Props extends Record<Keys, Value>
+    >(props: Props, speed: number = 400) {
     //属性原始值
-    const initialValues: Partial<T> = {}
+    const initialValues: Indexed = {}
 
     //属性变化量
-    const changeValues: Partial<T> = {}
+    const changeValues: Indexed = {}
 
     for (let key in props) {
       if (key === 'eAngle') {
-        initialValues[key] = ((this as any)[key] * 100) as T[typeof key]
-        changeValues[key] = (props[key] as number * 100 - (initialValues as any)[key]) as T[typeof key]
+        initialValues[key] = ((this as any)[key] * 100) as Props[typeof key]
+        changeValues[key] = (props[key] as number * 100 - (initialValues as any)[key]) as Props[typeof key]
       } else {
         initialValues[key] = (this as any)[key]
-        changeValues[key] = (props[key] as number - (this as any)[key]) as T[typeof key]
+        changeValues[key] = (props[key] as number - (this as any)[key]) as Props[typeof key]
       }
     }
 
@@ -133,45 +149,21 @@ export default class Shape {
 
             break;
 
+          case MOUSEMOVE:
+            const mousemovePointQueue = this.stage2d.mousemovePointQueue
+
+            //如果点击事件队列不为空，执行回调，并消耗一次点击坐标
+            if (!mousemovePointQueue.isEmpty()) {
+              mousemovePointQueue.clear()
+              event.callback(this.getStageEvent())
+            }
+
+            break;
+
           default:
             break;
         }
       })
-      // for (let i in eventList) {
-      //   switch (event.eventType) {
-      //     case 'click':
-      //       //检测 click 事件
-      //       let clickPointQueue = this.stage2d.clickPointQueue
-      //
-      //       //如果点击事件队列不为空，执行回调，并消耗一次点击坐标
-      //       if (!clickPointQueue.isEmpty()) {
-      //         eventList[i].callback(this.getEventData(clickPointQueue.dequeue()))
-      //
-      //         //先复原，然后播放点击动画,
-      //         this.chart2d.recoverAnimate()
-      //         if (this.recoverAnimateIng) {
-      //           this.recoverAnimateIng = false
-      //         } else {
-      //           this.clickAnimate()
-      //         }
-      //       }
-      //
-      //       break;
-      //
-      //     case 'mousemove':
-      //       //检测 mousemove 事件
-      //       let mousemoveEventQueue = this.stage2d.mousemoveEventQueue
-      //
-      //       //如果点击事件队列不为空，执行回调，并消耗一次点击坐标
-      //       if (!mousemoveEventQueue.isEmpty()) {
-      //         eventList[i].callback(this.getEventData(mousemoveEventQueue.dequeue()))
-      //       }
-      //
-      //       break;
-      //     default:
-      //       break;
-      //   }
-      // }
     }
   }
 

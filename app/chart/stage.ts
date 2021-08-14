@@ -2,7 +2,7 @@ import Queue from './queue'
 import Scene from './scene'
 import Point from './point'
 import Event2d from './event'
-import { CLICK, MOUSEUP, MOUSEDOWN, MOUSEMOVE, MOUSESCROLL } from '../constants'
+import { CLICK, MOUSEUP, MOUSEDOWN, MOUSEMOVE, MOUSEOUT, MOUSESCROLL } from '../constants'
 
 import { getPixelRatio } from '../utils/tool'
 
@@ -58,6 +58,7 @@ export default class Stage {
   public mouseupPointQueue = new Queue<Point>()
   public mousedownPointQueue = new Queue<Point>()
   public mousemovePointQueue = new Queue<Point>()
+  // public mouseoutPointQueue = new Queue<Point>()
 
   //事件列表
   public events: Array<Event2d>
@@ -98,7 +99,7 @@ export default class Stage {
     }, false);
 
     this.container.addEventListener("mousedown", (e: MouseEvent) => {
-      //coreStage2d.stageMouseDown(e)
+
     }, false)
 
     this.container.addEventListener("click", (e: MouseEvent) => {
@@ -159,6 +160,10 @@ export default class Stage {
         eventConst = MOUSEMOVE
         break;
 
+      case 'mouseout':
+        eventConst = MOUSEOUT
+        break;
+
       case 'DOMMouseScroll':
         eventConst = MOUSESCROLL
         break;
@@ -175,7 +180,22 @@ export default class Stage {
     this.clickPointQueue.clear()
     this.mouseupPointQueue.clear()
     this.mousedownPointQueue.clear()
-    this.mousemovePointQueue.clear()
+
+    if (!this.mousemovePointQueue.isEmpty()) {
+      this.events.forEach((event: Event2d) => {
+        if (event.eventType === MOUSEOUT) {
+          event.callback({
+            mouseX: Math.round(this.mouseX / this.pixelRatio),
+            mouseY: Math.round(this.mouseY / this.pixelRatio),
+            pageX: this.pageX,
+            pageY: this.pageY,
+            target: null
+          })
+        }
+      })
+
+      this.mousemovePointQueue.clear()
+    }
   }
 
   requestAnimationFrame() {

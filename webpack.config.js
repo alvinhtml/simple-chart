@@ -20,28 +20,10 @@ module.exports = {
     alias: {
       '~': path.resolve(__dirname, './app')
     },
-    extensions: ['.js', '.jsx', '.ts', '.tsx', '.scss', '.css']
+    extensions: ['.js', '.jsx', '.ts']
   },
   module: {
     rules: [
-      {
-        test: /\.(scss|sass)$/,
-        use: [
-          {
-            loader: 'style-loader',
-            options: {
-                insertAt: 'top' // 插入到 head 顶部
-            }
-          },
-          'postcss-loader',
-          {
-            loader: 'sass-loader',
-            options: {
-              includePaths: ['./node_modules/normalize-scss/sass']
-            }
-          }
-        ]
-      },
       {
         test: /\.(ts|tsx)$/,
         exclude: /node_modules/,

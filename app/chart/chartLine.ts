@@ -56,8 +56,9 @@ export default class ChartLine extends Chart {
         point.chart2d = this
         point.x = this.padding[3]
         point.y = this.padding[0] + shape.height
+        shape.pattern = style.colors[index]
         point.value = value
-        point.name = value.toString()
+        point.name = option.legend[index]
 
         return point
       })
@@ -69,8 +70,11 @@ export default class ChartLine extends Chart {
       this.shapes.push([createLine(value, i)])
     })
 
-    //图例绘制所需数据
+    // 图例绘制所需数据
     this.initLegend()
+
+    // 开启信息提示框
+    this.initTip()
   }
 
   //计算饼形状绘制信息

@@ -73,11 +73,4 @@ export class Charts {
   addEventListener(event: string, callback: Function) {
     this.stage2d.addEventListener(event, callback)
   }
-
-  //开启 tips
-  // tip (format) {
-    // this.chartList.forEach((chart) => {
-    //   chart.addTip(format)
-    // })
-  // }
 }

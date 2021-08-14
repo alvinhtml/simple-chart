@@ -1,5 +1,6 @@
 import Stage from "./stage";
 import Scene from './scene'
+import Tooltip from './tooltip'
 import { Legend, Axis } from './shape/index'
 import { lighten, darken } from '../utils/tool'
 
@@ -67,6 +68,9 @@ export default class Chart {
   // 坐标轴画面
   axisScene: Scene
 
+  // 提示消息框
+  tip: Tooltip
+
   initStyle() {
     if (this.option.style) {
       this.style = Object.assign(this.style, this.option.style)
@@ -80,6 +84,30 @@ export default class Chart {
   precentToFloat(value: string) {
     return parseInt(value.slice(0, -1)) / 100
   }
+
+  initTip() {
+    if(this.option.tip !== false) {
+      Tooltip.createStyle()
+  		this.tip = Tooltip.init(this.stage2d.container)
+      this.stage2d.addEventListener ('mousemove', (e: any) => {
+        this.moveTip(e)
+  		})
+
+      this.stage2d.addEventListener ('mouseout', (e: any) => {
+        this.tip.hide()
+  		})
+    }
+  }
+
+  moveTip(e: any) {
+    const target = e.target
+    this.tip.show()
+    this.tip.move(e.mouseX, e.mouseY, target)
+  }
+
+  clearTip () {
+		this.tip.hide()
+	}
 
   //初始化图例信息
   initLegend() {
